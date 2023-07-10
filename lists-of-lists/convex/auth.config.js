@@ -1,7 +1,7 @@
 export default {
     providers: [
       {
-        domain: "https://tight-crane-92.clerk.accounts.dev",
+        domain: process.env.CLERK_JWT_ISSUER_DOMAIN,
         applicationID: "convex",
       },
     ]
