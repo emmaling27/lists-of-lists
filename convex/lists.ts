@@ -32,9 +32,16 @@ export const createList = mutation({
 
 export const listLists = query(
   withUser(async ({ db, user }) => {
-    return db
+    let lists = await db
       .query("lists")
       .withIndex("by_creator_name", (q) => q.eq("creator", user._id))
       .collect();
+    return lists.map((list) => {
+      return {
+        _id: list._id,
+        _creationTime: list._creationTime,
+        name: list.name,
+      };
+    });
   })
 );
