@@ -15,7 +15,7 @@ export default defineSchema({
     name: v.string(),
     items: v.array(v.id("items")),
     creator: v.id("users"),
-    lastUpdated: v.int64(),
+    lastUpdated: v.float64(),
   }).index("by_creator_name", ["creator", "name"]),
   lists: defineTable({
     name: v.string(),
@@ -24,7 +24,7 @@ export default defineSchema({
       v.object({ item: v.id("items"), total: v.int64(), completed: v.int64() })
     ),
     sublists: v.array(v.id("sublists")),
-    lastUpdated: v.int64(),
+    lastUpdated: v.float64(),
   }).index("by_creator_name", ["creator", "name"]),
   sublists_to_lists: defineTable({
     sublist: v.id("sublists"),
