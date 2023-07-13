@@ -34,6 +34,7 @@ export default function NewListForm() {
   });
   function onSubmit(values: z.infer<typeof newListFormSchema>) {
     createList({ name: values.name });
+    form.reset();
   }
   return (
     <Form {...form}>
