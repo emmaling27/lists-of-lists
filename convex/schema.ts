@@ -21,7 +21,11 @@ export default defineSchema({
     name: v.string(),
     creator: v.id("users"),
     items: v.array(
-      v.object({ item: v.id("items"), total: v.int64(), completed: v.int64() })
+      v.object({
+        item: v.id("items"),
+        total: v.float64(),
+        completed: v.float64(),
+      })
     ),
     sublists: v.array(v.id("sublists")),
     lastUpdated: v.float64(),

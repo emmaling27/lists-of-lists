@@ -14,6 +14,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as list from "../list";
 import type * as lists from "../lists";
 import type * as middleware from "../middleware";
 import type * as storeUser from "../storeUser";
@@ -27,6 +28,7 @@ import type * as storeUser from "../storeUser";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  list: typeof list;
   lists: typeof lists;
   middleware: typeof middleware;
   storeUser: typeof storeUser;
