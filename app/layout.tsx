@@ -2,8 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import ConvexClientProvider from "./ConvexClientProvider";
-import { ClerkProvider, useAuth } from "@clerk/nextjs";
-import { ConvexProviderWithAuth } from "convex/react";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,6 +14,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: {
+  // eslint-disable-next-line no-undef
   children: React.ReactNode;
 }) {
   return (

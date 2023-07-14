@@ -8,7 +8,7 @@ export const listData = query({
     listId: v.id("lists"),
   },
 
-  handler: withUser(async ({ db, user: _ }, { listId }) => {
+  handler: withUser(async ({ db }, { listId }) => {
     let list = await db.get(listId);
     if (list === null) {
       throw new Error("List not found");
@@ -85,28 +85,28 @@ export const addItemToList = mutation({
 });
 
 export const checkItem = mutation({
-    args: {
-        listId: v.id("lists"),
-        itemId: v.id("items"),
-        completed: v.number(),
-    },
+  args: {
+    listId: v.id("lists"),
+    itemId: v.id("items"),
+    completed: v.number(),
+  },
 
-    handler: withUser(async ({ db, user }, { listId, itemId, completed }) => {
-        const list = await db.get(listId);
-        if (list === null) {
-            throw new Error(`List ${listId} not found`);
+  handler: withUser(async ({ db }, { listId, itemId, completed }) => {
+    const list = await db.get(listId);
+    if (list === null) {
+      throw new Error(`List ${listId} not found`);
+    }
+    const item = list.items.find((item) => item.item === itemId);
+    if (item === undefined) {
+      throw new Error(`Item ${itemId} not found in list ${listId}`);
+    }
+    await db.patch(listId, {
+      items: list.items.map((item) => {
+        if (item.item === itemId) {
+          return { ...item, completed };
         }
-        const item = list.items.find((item) => item.item === itemId);
-        if (item === undefined) {
-            throw new Error(`Item ${itemId} not found in list ${listId}`);
-        }
-        await db.patch(listId, {
-            items: list.items.map((item) => {
-                if (item.item === itemId) {
-                    return { ...item, completed };
-                }
-                return item;
-            }),
-        });
-    }),
+        return item;
+      }),
+    });
+  }),
 });

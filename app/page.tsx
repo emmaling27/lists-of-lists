@@ -6,7 +6,7 @@ import { UserButton } from "@clerk/nextjs";
 import { useConvexAuth } from "convex/react";
 
 export default function Home() {
-  const { isLoading, isAuthenticated } = useConvexAuth();
+  const { isAuthenticated } = useConvexAuth();
   const userId = useStoreUserEffect();
   if (userId === null) {
     return <div>Storing user...</div>;
