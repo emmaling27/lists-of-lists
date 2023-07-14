@@ -7,7 +7,7 @@ type ListData = {
   items: ItemData[];
 };
 
-type ItemData = {
+export type ItemData = {
   _id: Id<"items">;
   name: string;
   total: number;
