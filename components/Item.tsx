@@ -15,8 +15,10 @@ export default function Item({
   const checkItem = useMutation(api.list.checkItem);
   const [checked, setChecked] = useState(item.completed == 1);
   return (
-    <li key={item._id}>
+    <li key={item._id} className="items-top flex space-x-2">
       <Checkbox
+        id={item.name}
+        className="margin-1"
         checked={checked}
         onClick={() => {
           setChecked(!checked);
@@ -27,7 +29,9 @@ export default function Item({
           });
         }}
       />
-      {item.name}
+      <div className="grid gap-1">
+        <label htmlFor={item.name}>{item.name}</label>
+      </div>
     </li>
   );
 }

@@ -12,10 +12,10 @@ import {
   FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Card, CardDescription, CardFooter, CardHeader } from "./ui/card";
 
 const newListFormSchema = z.object({
   name: z
@@ -37,26 +37,37 @@ export default function NewListForm() {
     form.reset();
   }
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input placeholder="New List" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is the name of your list. It must be unique.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit">Submit</Button>
-      </form>
-    </Form>
+    <Card key="new-list" className="h-full w-full">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <CardHeader>
+                  <FormControl>
+                    <Input
+                      className="border-transparent"
+                      placeholder="New List"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    <CardDescription>
+                      This is the name of your list. It must be unique.
+                    </CardDescription>
+                  </FormDescription>
+                </CardHeader>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <CardFooter>
+            <Button type="submit">Submit</Button>
+          </CardFooter>
+        </form>
+      </Form>
+    </Card>
   );
 }
