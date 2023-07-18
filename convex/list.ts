@@ -110,3 +110,39 @@ export const checkItem = mutation({
     });
   }),
 });
+
+export const checkAllItems = mutation({
+  args: {
+    listId: v.id("lists"),
+  },
+
+  handler: withUser(async ({ db }, { listId }) => {
+    const list = await db.get(listId);
+    if (list === null) {
+      throw new Error(`List ${listId} not found`);
+    }
+    await db.patch(listId, {
+    items: list.items.map((item) => {
+        return { ...item, completed: item.total };
+      }),
+    });
+  }),
+});
+
+export const uncheckAllItems = mutation({
+  args: {
+    listId: v.id("lists"),
+  },
+
+  handler: withUser(async ({ db }, { listId }) => {
+    const list = await db.get(listId);
+    if (list === null) {
+      throw new Error(`List ${listId} not found`);
+    }
+    await db.patch(listId, {
+      items: list.items.map((item) => {
+        return { ...item, completed: 0 };
+      }),
+    });
+  }),
+});
