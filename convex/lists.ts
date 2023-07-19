@@ -1,6 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { withUser } from "./middleware";
+import { paginationOptsValidator } from "convex/server";
 
 export const createList = mutation({
   args: {
@@ -29,18 +30,14 @@ export const createList = mutation({
   }),
 });
 
-export const listLists = query(
-  withUser(async ({ db, user }) => {
-    let lists = await db
+export const listLists = query({
+  args: {
+    paginationOpts: paginationOptsValidator,
+  },
+  handler: withUser(async ({ db, user }, { paginationOpts }) => {
+    return await db
       .query("lists")
       .withIndex("by_creator", (q) => q.eq("creator", user._id))
-      .collect();
-    return lists.map((list) => {
-      return {
-        _id: list._id,
-        _creationTime: list._creationTime,
-        name: list.name,
-      };
-    });
-  })
-);
+      .paginate(paginationOpts);
+  }),
+});

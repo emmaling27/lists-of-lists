@@ -1,7 +1,7 @@
 "use client";
 
 import { api } from "@/convex/_generated/api";
-import { useQuery } from "convex/react";
+import { usePaginatedQuery } from "convex/react";
 import {
   Card,
   CardDescription,
@@ -14,10 +14,14 @@ import Link from "next/link";
 import NewListForm from "./NewListForm";
 
 export default function ListsView() {
-  const listLists = useQuery(api.lists.listLists);
+  const { results, status, loadMore } = usePaginatedQuery(
+    api.lists.listLists,
+    {},
+    { initialNumItems: 10 }
+  );
   return (
     <div className="grid my-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 justify-items-center">
-      {listLists
+      {results
         ?.map((list) => (
           <Card key={list._id} className="h-full w-full">
             <CardHeader>
@@ -33,7 +37,16 @@ export default function ListsView() {
             </CardFooter>
           </Card>
         ))
-        .concat([<NewListForm key="new-list" />])}
+        .concat([
+          <NewListForm key="new-list" />,
+          <Button
+            key="load-more"
+            onClick={() => loadMore(10)}
+            disabled={status !== "CanLoadMore"}
+          >
+            Load more
+          </Button>,
+        ])}
     </div>
   );
 }
