@@ -1,21 +1,14 @@
-import { Id } from "@/convex/_generated/dataModel";
 import { ItemData } from "../lib/types";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Checkbox } from "./ui/checkbox";
 import { useState } from "react";
 
-export default function Item({
-  listId,
-  item,
-}: {
-  listId: Id<"lists">;
-  item: ItemData;
-}) {
+export default function Item({ item }: { item: ItemData }) {
   const checkItem = useMutation(api.list.checkItem);
   const [checked, setChecked] = useState(item.completed == 1);
   return (
-    <li key={item._id} className="items-center flex space-x-2">
+    <li key={item.listItemId} className="items-center flex space-x-2">
       <Checkbox
         id={item.name}
         className="margin-1"
@@ -23,8 +16,7 @@ export default function Item({
         onClick={() => {
           setChecked(!checked);
           checkItem({
-            listId,
-            itemId: item._id,
+            listItemId: item.listItemId,
             completed: item.completed == 1 ? 0 : 1,
           });
         }}

@@ -22,7 +22,6 @@ export const createList = mutation({
     const list = {
       name,
       creator: user._id,
-      items: [],
       sublists: [],
       lastUpdated: Date.now(),
     };

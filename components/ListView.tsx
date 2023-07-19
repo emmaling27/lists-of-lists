@@ -26,7 +26,7 @@ export default function ListView({ listId }: { listId: Id<"lists"> }) {
             </Button>
           </div>
           {listData?.items.map((item) => (
-            <Item key={item._id + item.completed} listId={listId} item={item} />
+            <Item key={item.listItemId + item.completed} item={item} />
           ))}
           <NewItemForm listId={listId} />
         </ul>

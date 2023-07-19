@@ -20,18 +20,17 @@ export default defineSchema({
   lists: defineTable({
     name: v.string(),
     creator: v.id("users"),
-    items: v.array(
-      v.object({
-        item: v.id("items"),
-        total: v.float64(),
-        completed: v.float64(),
-      })
-    ),
     sublists: v.array(v.id("sublists")),
     lastUpdated: v.float64(),
   })
     .index("by_creator_name", ["creator", "name"])
     .index("by_creator", ["creator"]),
+  list_items: defineTable({
+    list: v.id("lists"),
+    item: v.id("items"),
+    total: v.float64(),
+    completed: v.float64(),
+  }).index("by_list", ["list"]),
   sublists_to_lists: defineTable({
     sublist: v.id("sublists"),
     lists: v.array(v.id("lists")),
