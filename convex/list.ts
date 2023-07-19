@@ -122,7 +122,7 @@ export const checkAllItems = mutation({
       throw new Error(`List ${listId} not found`);
     }
     await db.patch(listId, {
-    items: list.items.map((item) => {
+      items: list.items.map((item) => {
         return { ...item, completed: item.total };
       }),
     });
@@ -144,5 +144,23 @@ export const uncheckAllItems = mutation({
         return { ...item, completed: 0 };
       }),
     });
+  }),
+});
+
+export const otherSublists = query({
+  args: {
+    listId: v.id("lists"),
+  },
+
+  handler: withUser(async ({ db, user }, { listId }) => {
+    const list = await db.get(listId);
+    if (list === null) {
+      throw new Error(`List ${listId} not found`);
+    }
+    let sublists = await db
+      .query("sublists")
+      .withIndex("by_creator_name", (q) => q.eq("creator", user._id))
+      .collect();
+    return sublists.filter((sublist) => !list.sublists.includes(sublist._id));
   }),
 });

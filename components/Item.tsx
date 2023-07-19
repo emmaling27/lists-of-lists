@@ -14,7 +14,6 @@ export default function Item({
 }) {
   const checkItem = useMutation(api.list.checkItem);
   const [checked, setChecked] = useState(item.completed == 1);
-  console.log(checked);
   return (
     <li key={item._id} className="items-center flex space-x-2">
       <Checkbox
