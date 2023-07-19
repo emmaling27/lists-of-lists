@@ -34,7 +34,7 @@ export const listLists = query(
   withUser(async ({ db, user }) => {
     let lists = await db
       .query("lists")
-      .withIndex("by_creator_name", (q) => q.eq("creator", user._id))
+      .withIndex("by_creator", (q) => q.eq("creator", user._id))
       .collect();
     return lists.map((list) => {
       return {

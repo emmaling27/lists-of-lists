@@ -29,7 +29,9 @@ export default defineSchema({
     ),
     sublists: v.array(v.id("sublists")),
     lastUpdated: v.float64(),
-  }).index("by_creator_name", ["creator", "name"]),
+  })
+    .index("by_creator_name", ["creator", "name"])
+    .index("by_creator", ["creator"]),
   sublists_to_lists: defineTable({
     sublist: v.id("sublists"),
     lists: v.array(v.id("lists")),
