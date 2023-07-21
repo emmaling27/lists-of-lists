@@ -24,7 +24,6 @@ export const createList = mutation({
       name,
       creator: user._id,
       sublists: [],
-      lastUpdated: Date.now(),
     };
     await db.insert("lists", list);
   }),

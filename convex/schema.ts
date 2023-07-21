@@ -15,13 +15,11 @@ export default defineSchema({
     name: v.string(),
     items: v.array(v.id("items")),
     creator: v.id("users"),
-    lastUpdated: v.float64(),
   }).index("by_creator_name", ["creator", "name"]),
   lists: defineTable({
     name: v.string(),
     creator: v.id("users"),
     sublists: v.array(v.id("sublists")),
-    lastUpdated: v.float64(),
   })
     .index("by_creator_name", ["creator", "name"])
     .index("by_creator", ["creator"]),

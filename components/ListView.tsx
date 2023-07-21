@@ -31,7 +31,6 @@ export default function ListView({ listId }: { listId: Id<"lists"> }) {
           <NewItemForm listId={listId} />
         </ul>
         <div className="basis-1/3">
-          <h2 className="text-2xl font-semibold">Sublists</h2>
           <Sublists listId={listId} />
         </div>
       </div>

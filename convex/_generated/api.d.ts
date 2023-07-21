@@ -14,10 +14,12 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as helpers from "../helpers";
 import type * as list from "../list";
 import type * as lists from "../lists";
 import type * as middleware from "../middleware";
 import type * as storeUser from "../storeUser";
+import type * as sublist from "../sublist";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -28,10 +30,12 @@ import type * as storeUser from "../storeUser";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  helpers: typeof helpers;
   list: typeof list;
   lists: typeof lists;
   middleware: typeof middleware;
   storeUser: typeof storeUser;
+  sublist: typeof sublist;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
