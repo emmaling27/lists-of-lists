@@ -17,12 +17,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Id } from "@/convex/_generated/dataModel";
+import { nameString } from "@/lib/utils";
 
 const newItemFormSchema = z.object({
-  name: z
-    .string()
-    .min(2, { message: "Item name must be at least two characters." })
-    .max(50, { message: "Item name must be at most 50 characters." }),
+  name: nameString("Item name"),
 });
 
 export default function NewItemForm({ listId }: { listId: Id<"lists"> }) {

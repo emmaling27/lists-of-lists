@@ -14,12 +14,10 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { nameString } from "@/lib/utils";
 
 const newSublistFormSchema = z.object({
-  name: z
-    .string()
-    .min(2, { message: "Sublist name must be at least two characters." })
-    .max(50, { message: "Sublist name must be at most 50 characters." }),
+  name: nameString("Sublist name"),
 });
 
 export default function NewSublistForm() {

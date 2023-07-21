@@ -16,12 +16,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Card, CardDescription, CardFooter, CardHeader } from "./ui/card";
+import { nameString } from "@/lib/utils";
 
 const newListFormSchema = z.object({
-  name: z
-    .string()
-    .min(2, { message: "List name must be at least two characters." })
-    .max(50, { message: "List name must be at most 50 characters." }),
+  name: nameString("List name"),
 });
 
 export default function NewListForm() {
