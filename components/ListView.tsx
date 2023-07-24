@@ -3,10 +3,10 @@
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
-import NewItemForm from "./NewItemForm";
 import Item from "./Item";
 import { Button } from "./ui/button";
 import Sublists from "./Sublists";
+import { NewItemFormForList } from "./NewItemForm";
 
 export default function ListView({ listId }: { listId: Id<"lists"> }) {
   const listData = useQuery(api.list.listData, { listId });
@@ -28,7 +28,7 @@ export default function ListView({ listId }: { listId: Id<"lists"> }) {
           {listData?.items.map((item) => (
             <Item key={item.listItemId + item.completed} item={item} />
           ))}
-          <NewItemForm listId={listId} />
+          <NewItemFormForList listId={listId} />
         </ul>
         <div className="basis-1/3">
           <Sublists listId={listId} />

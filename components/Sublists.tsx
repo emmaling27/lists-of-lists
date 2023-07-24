@@ -12,6 +12,7 @@ import {
 import { Button } from "./ui/button";
 import NewSublistForm from "./NewSublistForm";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { NewItemFormForSublist } from "./NewItemForm";
 
 export default function Sublists({ listId }: { listId: Id<"lists"> }) {
   const sublists = useQuery(api.list.otherSublists, { listId });
@@ -45,10 +46,13 @@ export default function Sublists({ listId }: { listId: Id<"lists"> }) {
               ) : (
                 <ul>
                   {sublist.items.map((item) => (
-                    <li key={item._id}>{item.name}</li>
+                    <li key={item._id} className="my-2 ml-6 list-disc">
+                      {item.name}
+                    </li>
                   ))}
                 </ul>
               )}
+              <NewItemFormForSublist sublistId={sublist._id} />
             </PopoverContent>
           </Popover>
         ))}
