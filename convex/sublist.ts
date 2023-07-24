@@ -34,3 +34,20 @@ export const addItemToSublist = mutation({
     });
   }),
 });
+
+export const removeItemFromSublist = mutation({
+  args: {
+    sublistId: v.id("sublists"),
+    itemId: v.id("items"),
+  },
+
+  handler: withUser(async ({ db }, { sublistId, itemId }) => {
+    let sublist = await db.get(sublistId);
+    if (!sublist) {
+      throw new Error(`Sublist ${sublist} not found.`);
+    }
+    await db.patch(sublistId, {
+      items: sublist.items.filter((item) => item !== itemId),
+    });
+  }),
+});
