@@ -20,8 +20,16 @@ export default function ListView({ listId }: { listId: Id<"lists"> }) {
       <div className="flex flex-row">
         <ul className="container">
           <div className="flex flex-row gap-2 my-2">
-            <Button onClick={() => checkAllItems({ listId })}>Check All</Button>
-            <Button onClick={() => uncheckAllItems({ listId })}>
+            <Button
+              variant="secondary"
+              onClick={() => checkAllItems({ listId })}
+            >
+              Check All
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => uncheckAllItems({ listId })}
+            >
               Uncheck All
             </Button>
           </div>
