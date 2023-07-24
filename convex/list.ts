@@ -112,10 +112,33 @@ export const otherSublists = query({
     if (list === null) {
       throw new Error(`List ${listId} not found`);
     }
-    let sublists = await db
+    const sublists = await db
       .query("sublists")
       .withIndex("by_creator_name", (q) => q.eq("creator", user._id))
       .collect();
-    return sublists.filter((sublist) => !list.sublists.includes(sublist._id));
+
+    const sublistsWithItems = await Promise.all(
+      sublists.map(async (sublist) => {
+        const items = await Promise.all(
+          sublist.items.map(async (itemId) => {
+            const item = await db.get(itemId);
+            if (item === null) {
+              throw new Error(`Item ${itemId} not found`);
+            }
+            return item;
+          })
+        );
+        return {
+          _id: sublist._id,
+          _creationTime: sublist._creationTime,
+          creator: sublist.creator,
+          name: sublist.name,
+          items,
+        };
+      })
+    );
+    return sublistsWithItems.filter(
+      (sublist) => !list.sublists.includes(sublist._id)
+    );
   }),
 });

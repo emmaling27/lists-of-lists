@@ -11,6 +11,7 @@ import {
 } from "./ui/dialog";
 import { Button } from "./ui/button";
 import NewSublistForm from "./NewSublistForm";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 export default function Sublists({ listId }: { listId: Id<"lists"> }) {
   const sublists = useQuery(api.list.otherSublists, { listId });
@@ -34,7 +35,22 @@ export default function Sublists({ listId }: { listId: Id<"lists"> }) {
 
       <div className="flex flex-col gap-2">
         {sublists?.map((sublist) => (
-          <div key={sublist._id}>{sublist.name}</div>
+          <Popover key={sublist._id}>
+            <PopoverTrigger className="text-left">
+              {sublist.name}
+            </PopoverTrigger>
+            <PopoverContent>
+              {sublist.items.length == 0 ? (
+                "No items in this list."
+              ) : (
+                <ul>
+                  {sublist.items.map((item) => (
+                    <li key={item._id}>{item.name}</li>
+                  ))}
+                </ul>
+              )}
+            </PopoverContent>
+          </Popover>
         ))}
       </div>
     </>
