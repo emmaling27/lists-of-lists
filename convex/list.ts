@@ -84,6 +84,16 @@ export const addItemToList = mutation({
   }),
 });
 
+export const removeItemFromList = mutation({
+  args: {
+    listItemId: v.id("list_items"),
+  },
+
+  handler: withUser(async ({ db }, { listItemId }) => {
+    await db.delete(listItemId);
+  }),
+});
+
 export const checkItem = mutation({
   args: {
     listItemId: v.id("list_items"),
