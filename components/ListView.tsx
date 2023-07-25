@@ -12,7 +12,8 @@ export default function ListView({ listId }: { listId: Id<"lists"> }) {
   const listData = useQuery(api.list.listData, { listId });
   const checkAllItems = useMutation(api.list.checkAllItems);
   const uncheckAllItems = useMutation(api.list.uncheckAllItems);
-  let listName = listData?.name;
+  const listName = listData?.name;
+  const itemsBySublists = listData?.itemsBySublists;
   return (
     <>
       <title>{listName}</title>
@@ -33,10 +34,27 @@ export default function ListView({ listId }: { listId: Id<"lists"> }) {
               Uncheck All
             </Button>
           </div>
-          {listData?.items.map((item) => (
-            <Item key={item.listItemId + item.completed} item={item} />
-          ))}
-          <NewItemFormForList listId={listId} />
+          <div className="flex flex-col gap-2">
+            {itemsBySublists &&
+              Object.entries(itemsBySublists).map(([sublistName, items]) => (
+                <div key={sublistName} className="m-2">
+                  <h2 className="text-xl font-medium">{sublistName}</h2>
+                  <div className="ml-2">
+                    {" "}
+                    {items.map((item) => (
+                      <Item
+                        key={item.listItemId + item.completed}
+                        item={item}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            {listData?.itemsNotOnSublists.map((item) => (
+              <Item key={item.listItemId + item.completed} item={item} />
+            ))}
+            <NewItemFormForList listId={listId} />
+          </div>
         </ul>
         <div className="basis-1/3">
           <Sublists listId={listId} />

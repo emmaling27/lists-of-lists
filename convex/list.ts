@@ -1,3 +1,4 @@
+import { ListData } from "../lib/types";
 import { getItemByName } from "./helpers";
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
@@ -9,16 +10,15 @@ export const listData = query({
   },
 
   handler: withUser(async ({ db }, { listId }) => {
-    let list = await db.get(listId);
+    const list = await db.get(listId);
     if (list === null) {
       throw new Error("List not found");
     }
-    let listItems = await db
+    const listItems = await db
       .query("list_items")
-      .withIndex("by_list", (q) => q.eq("list", listId))
+      .withIndex("by_list_sublist", (q) => q.eq("list", listId))
       .collect();
-
-    const items = await Promise.all(
+    let items = await Promise.all(
       listItems.map(async (listItem) => {
         const itemDoc = await db.get(listItem.item);
         if (itemDoc === null) {
@@ -27,18 +27,42 @@ export const listData = query({
         return {
           listItemId: listItem._id,
           item: itemDoc._id,
+          sublist: listItem.sublist,
           name: itemDoc.name,
           total: listItem.total,
           completed: listItem.completed,
         };
       })
     );
-    return {
+    let sublistsById: { [id: string]: string } = {};
+    await Promise.all(
+      list.sublists.map(async (sublistId) => {
+        const sublist = await db.get(sublistId);
+        if (sublist === null) {
+          throw new Error(`Sublist ${sublistId} not found`);
+        }
+        sublistsById[sublistId] = sublist.name;
+      })
+    );
+    const listData: ListData = {
       _id: list._id,
       _creationTime: list._creationTime,
       name: list.name,
-      items,
+      itemsBySublists: {},
+      itemsNotOnSublists: [],
     };
+    items.forEach((item) => {
+      if (item.sublist === null) {
+        listData.itemsNotOnSublists.push(item);
+      } else {
+        const sublistName = sublistsById[item.sublist];
+        if (listData.itemsBySublists[sublistName] === undefined) {
+          listData.itemsBySublists[sublistName] = [];
+        }
+        listData.itemsBySublists[sublistName].push(item);
+      }
+    });
+    return listData;
   }),
 });
 
@@ -53,6 +77,7 @@ export const addItemToList = mutation({
     await db.insert("list_items", {
       list: listId,
       item: itemId,
+      sublist: null,
       total: 1,
       completed: 0,
     });
@@ -78,7 +103,7 @@ export const checkAllItems = mutation({
   handler: withUser(async ({ db }, { listId }) => {
     const listItems = await db
       .query("list_items")
-      .withIndex("by_list", (q) => q.eq("list", listId))
+      .withIndex("by_list_sublist", (q) => q.eq("list", listId))
       .collect();
     await Promise.all(
       listItems.map((listItem) => db.patch(listItem._id, { completed: 1 }))
@@ -94,7 +119,7 @@ export const uncheckAllItems = mutation({
   handler: withUser(async ({ db }, { listId }) => {
     const listItems = await db
       .query("list_items")
-      .withIndex("by_list", (q) => q.eq("list", listId))
+      .withIndex("by_list_sublist", (q) => q.eq("list", listId))
       .collect();
     await Promise.all(
       listItems.map((listItem) => db.patch(listItem._id, { completed: 0 }))
@@ -140,5 +165,48 @@ export const otherSublists = query({
     return sublistsWithItems.filter(
       (sublist) => !list.sublists.includes(sublist._id)
     );
+  }),
+});
+
+export const addSublistToList = mutation({
+  args: {
+    listId: v.id("lists"),
+    sublistId: v.id("sublists"),
+  },
+  handler: withUser(async ({ db }, { listId, sublistId }) => {
+    const list = await db.get(listId);
+    if (list === null) {
+      throw new Error(`List ${listId} not found`);
+    }
+    if (sublistId in list.sublists) {
+      throw new Error(`Sublist ${sublistId} already in list ${listId}`);
+    }
+    const sublist = await db.get(sublistId);
+    if (sublist === null) {
+      throw new Error(`Sublist ${sublistId} not found`);
+    }
+    // Add items from the sublist to the list
+    await Promise.all(
+      sublist.items.map(async (itemId) => {
+        const existingListItem = await db
+          .query("list_items")
+          .withIndex("by_list_item", (q) =>
+            q.eq("list", listId).eq("item", itemId)
+          )
+          .first();
+        if (existingListItem === null) {
+          return await db.insert("list_items", {
+            list: listId,
+            item: itemId,
+            sublist: sublistId,
+            total: 1,
+            completed: 0,
+          });
+        }
+      })
+    );
+    await db.patch(listId, {
+      sublists: list.sublists.concat([sublistId]),
+    });
   }),
 });

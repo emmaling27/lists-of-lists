@@ -1,6 +1,6 @@
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import {
   Dialog,
   DialogContent,
@@ -14,9 +14,12 @@ import NewSublistForm from "./NewSublistForm";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { NewItemFormForSublist } from "./NewItemForm";
 import SublistItem from "./SublistItem";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import { PlusCircledIcon } from "@radix-ui/react-icons";
 
 export default function Sublists({ listId }: { listId: Id<"lists"> }) {
   const sublists = useQuery(api.list.otherSublists, { listId });
+  const addSublistToList = useMutation(api.list.addSublistToList);
   return (
     <>
       <h2 className="text-2xl font-semibold">Sublists</h2>
@@ -39,6 +42,20 @@ export default function Sublists({ listId }: { listId: Id<"lists"> }) {
         {sublists?.map((sublist) => (
           <Popover key={sublist._id}>
             <PopoverTrigger className="text-left">
+              <Tooltip>
+                <TooltipTrigger>
+                  <Button
+                    variant="ghost"
+                    className="p-1"
+                    onClick={() =>
+                      addSublistToList({ listId, sublistId: sublist._id })
+                    }
+                  >
+                    <PlusCircledIcon />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Add {sublist.name} to the list.</TooltipContent>
+              </Tooltip>
               {sublist.name}
             </PopoverTrigger>
             <PopoverContent>

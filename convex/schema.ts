@@ -26,9 +26,12 @@ export default defineSchema({
   list_items: defineTable({
     list: v.id("lists"),
     item: v.id("items"),
+    sublist: v.union(v.id("sublists"), v.null()),
     total: v.float64(),
     completed: v.float64(),
-  }).index("by_list", ["list"]),
+  })
+    .index("by_list_sublist", ["list", "sublist"])
+    .index("by_list_item", ["list", "item"]),
   sublists_to_lists: defineTable({
     sublist: v.id("sublists"),
     lists: v.array(v.id("lists")),
