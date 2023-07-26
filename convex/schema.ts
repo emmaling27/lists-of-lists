@@ -32,8 +32,4 @@ export default defineSchema({
   })
     .index("by_list_sublist", ["list", "sublist"])
     .index("by_list_item", ["list", "item"]),
-  sublists_to_lists: defineTable({
-    sublist: v.id("sublists"),
-    lists: v.array(v.id("lists")),
-  }).index("by_sublist", ["sublist"]),
 });
