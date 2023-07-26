@@ -76,7 +76,7 @@ export default function Sublists({ listId }: { listId: Id<"lists"> }) {
               <PopoverTrigger className="text-left">
                 {sublist.name}
               </PopoverTrigger>
-              <PopoverContent>
+              <PopoverContent className="flex flex-col gap-2">
                 {sublist.items.length == 0 ? (
                   "No items in this list."
                 ) : (
