@@ -68,18 +68,18 @@ function NewItemForm({
 }) {
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel className="hidden">Name</FormLabel>
               <FormControl>
                 <Input placeholder="New item" {...field} />
               </FormControl>
-              <FormDescription>
-                This is the name of your item. It must be unique.
+              <FormDescription className="hidden">
+                Name of your item
               </FormDescription>
               <FormMessage />
             </FormItem>

@@ -50,9 +50,11 @@ export default function ListView({ listId }: { listId: Id<"lists"> }) {
                   </div>
                 </div>
               ))}
-            {listData?.itemsNotOnSublists.map((item) => (
-              <Item key={item.listItemId + item.completed} item={item} />
-            ))}
+            <div className="ml-2">
+              {listData?.itemsNotOnSublists.map((item) => (
+                <Item key={item.listItemId + item.completed} item={item} />
+              ))}
+            </div>
             <NewItemFormForList listId={listId} />
           </div>
         </ul>

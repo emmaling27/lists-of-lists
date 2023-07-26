@@ -26,7 +26,9 @@ export default function Sublists({ listId }: { listId: Id<"lists"> }) {
       <h2 className="text-2xl font-semibold">Sublists</h2>
       <Dialog>
         <DialogTrigger asChild>
-          <Button>Add a new sublist</Button>
+          <Button variant="outline" className="m-2">
+            Add a new sublist
+          </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
@@ -46,7 +48,7 @@ export default function Sublists({ listId }: { listId: Id<"lists"> }) {
               <TooltipTrigger>
                 <Button
                   variant="ghost"
-                  className="p-1"
+                  className="h-0 p-1"
                   onClick={async () => {
                     if (sublist.inList) {
                       await removeSublistFromList({
