@@ -11,11 +11,11 @@ export default function Home() {
     return <div>Storing user...</div>;
   }
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex min-h-screen flex-col items-center p-24">
       <title>Lists of Lists</title>
       <h1 className="text-3xl font-semibold my-4">Lists of Lists</h1>
       <ListsView />
-      <div>
+      <div className="mt-auto">
         {isAuthenticated ? "Logged in" : "Logged out or still loading"}
         <UserButton afterSignOutUrl="/" />
       </div>

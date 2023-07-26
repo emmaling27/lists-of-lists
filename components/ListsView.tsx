@@ -23,14 +23,14 @@ export default function ListsView() {
     <div className="grid my-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 justify-items-center">
       {results
         ?.map((list) => (
-          <Card key={list._id} className="h-full w-full">
+          <Card key={list._id} className="flex flex-col h-full w-full">
             <CardHeader>
               <CardTitle>{list.name}</CardTitle>
               <CardDescription>
                 Created on {new Date(list._creationTime).toDateString()}
               </CardDescription>
             </CardHeader>
-            <CardFooter>
+            <CardFooter className="mt-auto">
               <Button asChild>
                 <Link href={`/list/${list._id}`}>View</Link>
               </Button>
