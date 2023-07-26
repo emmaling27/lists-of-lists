@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Card, CardDescription, CardFooter, CardHeader } from "./ui/card";
+import { Card, CardFooter, CardHeader } from "./ui/card";
 import { nameString } from "@/lib/utils";
 
 const newListFormSchema = z.object({
@@ -52,9 +52,7 @@ export default function NewListForm() {
                     />
                   </FormControl>
                   <FormDescription>
-                    <CardDescription>
-                      This is the name of your list. It must be unique.
-                    </CardDescription>
+                    This is the name of your list. It must be unique.
                   </FormDescription>
                 </CardHeader>
                 <FormMessage />
