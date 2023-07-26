@@ -137,7 +137,7 @@ export const uncheckAllItems = mutation({
   }),
 });
 
-export const otherSublists = query({
+export const sublists = query({
   args: {
     listId: v.id("lists"),
   },
@@ -169,12 +169,11 @@ export const otherSublists = query({
           creator: sublist.creator,
           name: sublist.name,
           items,
+          inList: list.sublists.includes(sublist._id),
         };
       })
     );
-    return sublistsWithItems.filter(
-      (sublist) => !list.sublists.includes(sublist._id)
-    );
+    return sublistsWithItems;
   }),
 });
 
@@ -183,6 +182,7 @@ export const addSublistToList = mutation({
     listId: v.id("lists"),
     sublistId: v.id("sublists"),
   },
+
   handler: withUser(async ({ db }, { listId, sublistId }) => {
     const list = await db.get(listId);
     if (list === null) {
@@ -218,5 +218,35 @@ export const addSublistToList = mutation({
     await db.patch(listId, {
       sublists: list.sublists.concat([sublistId]),
     });
+  }),
+});
+
+export const removeSublistFromList = mutation({
+  args: {
+    listId: v.id("lists"),
+    sublistId: v.id("sublists"),
+  },
+
+  handler: withUser(async ({ db }, { listId, sublistId }) => {
+    const removeListItems = async () => {
+      const listItems = await db
+        .query("list_items")
+        .withIndex("by_list_sublist", (q) =>
+          q.eq("list", listId).eq("sublist", sublistId)
+        )
+        .collect();
+
+      await Promise.all(listItems.map((listItem) => db.delete(listItem._id)));
+    };
+    const removeSublist = async () => {
+      const list = await db.get(listId);
+      if (list === null) {
+        throw new Error(`List ${listId} not found`);
+      }
+      await db.patch(listId, {
+        sublists: list.sublists.filter((id) => id !== sublistId),
+      });
+    };
+    await Promise.all([removeListItems(), removeSublist()]);
   }),
 });
