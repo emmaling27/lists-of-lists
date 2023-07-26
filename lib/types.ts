@@ -1,5 +1,9 @@
 import { Id } from "../convex/_generated/dataModel";
 
+export type Result =
+  | { status: "success" }
+  | { status: "error"; message: string };
+
 export type ItemData = {
   listItemId: Id<"list_items">;
   item: Id<"items">;

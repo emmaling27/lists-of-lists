@@ -2,13 +2,14 @@ import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { withUser } from "./middleware";
 import { paginationOptsValidator } from "convex/server";
+import { Result } from "../lib/types";
 
 export const createList = mutation({
   args: {
     name: v.string(),
   },
 
-  handler: withUser(async ({ db, user }, { name }) => {
+  handler: withUser(async ({ db, user }, { name }): Promise<Result> => {
     // Make sure list name is unique for the creator
     const listsWithSameName = await db
       .query("lists")
@@ -17,7 +18,10 @@ export const createList = mutation({
       )
       .collect();
     if (listsWithSameName.length > 0) {
-      throw new Error("List with same name already exists");
+      return {
+        status: "error",
+        message: "List with the same name already exists. Try another name.",
+      };
     }
 
     const list = {
@@ -26,6 +30,7 @@ export const createList = mutation({
       sublists: [],
     };
     await db.insert("lists", list);
+    return { status: "success" };
   }),
 });
 

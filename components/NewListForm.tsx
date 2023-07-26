@@ -17,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Card, CardFooter, CardHeader } from "./ui/card";
 import { nameString } from "@/lib/utils";
+import { useToast } from "./ui/use-toast";
 
 const newListFormSchema = z.object({
   name: nameString("List name"),
@@ -30,9 +31,18 @@ export default function NewListForm() {
       name: "",
     },
   });
-  function onSubmit(values: z.infer<typeof newListFormSchema>) {
-    createList({ name: values.name });
-    form.reset();
+  const { toast } = useToast();
+
+  async function onSubmit(values: z.infer<typeof newListFormSchema>) {
+    const result = await createList({ name: values.name });
+    if (result.status === "error") {
+      toast({
+        title: "Error while creating list",
+        description: result.message,
+      });
+    } else {
+      form.reset();
+    }
   }
   return (
     <Card key="new-list" className="h-full w-full">
