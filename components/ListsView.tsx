@@ -37,16 +37,12 @@ export default function ListsView() {
             </CardFooter>
           </Card>
         ))
-        .concat([
-          <NewListForm key="new-list" />,
-          <Button
-            key="load-more"
-            onClick={() => loadMore(10)}
-            disabled={status !== "CanLoadMore"}
-          >
-            Load more
-          </Button>,
-        ])}
+        .concat([<NewListForm key="new-list" />])}
+      {status == "CanLoadMore" && (
+        <Button key="load-more" onClick={() => loadMore(10)}>
+          Load more
+        </Button>
+      )}
     </div>
   );
 }
