@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { TrashIcon } from "@radix-ui/react-icons";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import {
   Card,
   CardDescription,
@@ -12,6 +11,13 @@ import { Doc } from "@/convex/_generated/dataModel";
 import { Button } from "./ui/button";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
 
 export default function ListCard({ list }: { list: Doc<"lists"> }) {
   const deleteList = useMutation(api.lists.deleteList);
@@ -27,18 +33,23 @@ export default function ListCard({ list }: { list: Doc<"lists"> }) {
         <Button asChild>
           <Link href={`/list/${list._id}`}>View</Link>
         </Button>
-        <Tooltip>
-          <TooltipTrigger>
-            <Button
-              variant="ghost"
-              className="p-2"
-              onClick={() => deleteList({ listId: list._id })}
-            >
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="ghost" className="p-2">
               <TrashIcon />
             </Button>
-          </TooltipTrigger>
-          <TooltipContent>Delete list</TooltipContent>
-        </Tooltip>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogTitle>Delete list</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this list? This action is
+              permanent.
+            </DialogDescription>
+            <Button onClick={() => deleteList({ listId: list._id })}>
+              Yes, delete
+            </Button>
+          </DialogContent>
+        </Dialog>
       </CardFooter>
     </Card>
   );
