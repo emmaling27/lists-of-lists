@@ -63,6 +63,27 @@ export const deleteList = mutation({
   }),
 });
 
+export const archiveList = mutation({
+  args: {
+    listId: v.id("lists"),
+  },
+
+  handler: withUser(async ({ db, user }, { listId }): Promise<Result> => {
+    const list = await db.get(listId);
+    if (list === null) {
+      throw new Error(`List ${listId} not found`);
+    }
+    if (list.creator !== user._id) {
+      return {
+        status: "error",
+        message: "Unauthorized: Users can only archive lists they created.",
+      };
+    }
+    await db.patch(listId, { archived: true });
+    return { status: "success" };
+  }),
+});
+
 export const listLists = query({
   args: {
     paginationOpts: paginationOptsValidator,
