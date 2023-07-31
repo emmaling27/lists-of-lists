@@ -20,7 +20,7 @@ export default defineSchema({
     name: v.string(),
     creator: v.id("users"),
     sublists: v.array(v.id("sublists")),
-    archived: v.optional(v.boolean()),
+    archived: v.boolean(),
   })
     .index("by_creator_name", ["creator", "name"])
     .index("by_creator", ["creator"]),

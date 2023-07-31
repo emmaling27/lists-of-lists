@@ -18,6 +18,7 @@ import type * as helpers from "../helpers";
 import type * as list from "../list";
 import type * as lists from "../lists";
 import type * as middleware from "../middleware";
+import type * as migrations from "../migrations";
 import type * as storeUser from "../storeUser";
 import type * as sublist from "../sublist";
 
@@ -34,6 +35,7 @@ declare const fullApi: ApiFromModules<{
   list: typeof list;
   lists: typeof lists;
   middleware: typeof middleware;
+  migrations: typeof migrations;
   storeUser: typeof storeUser;
   sublist: typeof sublist;
 }>;
