@@ -44,7 +44,7 @@ export default function SublistItem({
               <MinusIcon />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Remove hat from the sublist.</TooltipContent>
+          <TooltipContent>Remove {item.name} from the sublist.</TooltipContent>
         </Tooltip>
       )}
     </li>
